@@ -17,7 +17,7 @@ var connection = mysql.createConnection({
 
 const start = () => {
     return inquirer.prompt({
-        name:"action",
+        name:"menuitem",
         type: "list",
         message: "Please select an option below.",
         choices: [
@@ -32,7 +32,7 @@ const start = () => {
         ]
     })
     .then( response => {
-        switch (response){
+        switch (response.menuitem){
             case "View all departments":
                 return viewDepartments();
             case  "View all roles?":
@@ -47,8 +47,8 @@ const start = () => {
                 return addEmployee();
             case "Update employee role":
                 return updateEmployee();
-            default:
-                connection.end();                        
+            case "Exit":
+               return connection.end();                        
         }
         // if (answer.action === 'View all departments') {
         //     viewDepartments();
@@ -71,20 +71,22 @@ const start = () => {
     })
 }
 const viewDepartments = () => {
+    
     connection.query("SELECT * FROM department", (err, res) => {
         if(err) throw err;
-        console.log("Departments:")
+        console.log(res)
         // res.forEach(department => {
         //     console.log(`ID: ${department.id} | Name: ${department.name}`)
         // })
-        // start();
+        start();
     });
 }
 
 connection.connect(function(err){
     if (err) throw err;
     console.log("connected as id " + connection.threadId);
-    start();
+   
 });
 
 
+start()
