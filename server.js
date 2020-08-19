@@ -9,18 +9,17 @@ var connection = mysql.createConnection({
     database: "employee_db"
 });
 
-connection.connect(function(err){
-    if (err) throw err;
-    console.log("connected as id " + connection.threadId);
-    // start();
-});
+// connection.connect(function(err){
+//     if (err) throw err;
+//     console.log("connected as id " + connection.threadId);
+//     // start();
+// });
 
-function start() {
-    inquirer
-    .prompt({
+const start = () => {
+    return inquirer.prompt({
         name:"action",
         type: "list",
-        message: "What would you like to do?",
+        message: "Please select an option below.",
         choices: [
             "View all departments",
             "View all roles?",
@@ -32,7 +31,60 @@ function start() {
             "Exit"
         ]
     })
+    .then( response => {
+        switch (response){
+            case "View all departments":
+                return viewDepartments();
+            case  "View all roles?":
+                return viewRoles();
+            case  "View all employees":
+                return viewEmployees();
+            case "Add a department":
+                return addDepartment();
+            case "Add a Role":
+                return addRole();
+            case "Add an employee":
+                return addEmployee();
+            case "Update employee role":
+                return updateEmployee();
+            default:
+                connection.end();                        
+        }
+        // if (answer.action === 'View all departments') {
+        //     viewDepartments();
+        // } else if (answer.action === 'View all roles') {
+        //     viewRoles();
+        // } else if (answer.action === 'View all employees') {
+        //     viewEmployees();
+        // } else if (answer.action === 'Add a department') {
+        //     addDepartment();
+        // } else if (answer.action === 'Add a role') {
+        //     addRole();
+        // } else if (answer.action === 'Add an employee') {
+        //     addEmployee();
+        // } else if (answer.action === 'Update employee role') {
+        //     updateRole();
+        // }
+        // else if (answer.action === 'Exit') {
+        //     connection.end();
+        // }
+    })
+}
+const viewDepartments = () => {
+    connection.query("SELECT * FROM department", (err, res) => {
+        if(err) throw err;
+        console.log("Departments:")
+        // res.forEach(department => {
+        //     console.log(`ID: ${department.id} | Name: ${department.name}`)
+        // })
+        // start();
+    });
 }
 
-start()
+connection.connect(function(err){
+    if (err) throw err;
+    console.log("connected as id " + connection.threadId);
+    start();
+});
+
 
