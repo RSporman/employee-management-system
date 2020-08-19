@@ -32,9 +32,12 @@ const start = () => {
         ]
     })
     .then( response => {
+        console.log("response")
+        console.log(response)
         switch (response.menuitem){
             case "View all departments":
-                return viewDepartments();
+               return viewDepartments();
+                // start()
             case  "View all roles?":
                 return viewRoles();
             case  "View all employees":
@@ -74,11 +77,21 @@ const viewDepartments = () => {
     
     connection.query("SELECT * FROM department", (err, res) => {
         if(err) throw err;
-        console.log(res)
-        // res.forEach(department => {
-        //     console.log(`ID: ${department.id} | Name: ${department.name}`)
-        // })
-        start();
+        // console.log(res)
+        res.forEach(department => {
+            console.log(`ID: ${department.id} | Name: ${department.name}`)
+        })  
+    });
+}
+
+const viewRoles = () => {
+    
+    connection.query("SELECT * FROM roles", (err, res) => {
+        if(err) throw err;
+        // console.log(res)
+        res.forEach( roles => {
+            console.log(`ID: ${roles.id} | Title: ${roles.title} | Salary: ${roles.salary}`)
+        })  
     });
 }
 
