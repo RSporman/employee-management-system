@@ -53,24 +53,7 @@ const start = () => {
             case "Exit":
                return connection.end();                        
         }
-        // if (answer.action === 'View all departments') {
-        //     viewDepartments();
-        // } else if (answer.action === 'View all roles') {
-        //     viewRoles();
-        // } else if (answer.action === 'View all employees') {
-        //     viewEmployees();
-        // } else if (answer.action === 'Add a department') {
-        //     addDepartment();
-        // } else if (answer.action === 'Add a role') {
-        //     addRole();
-        // } else if (answer.action === 'Add an employee') {
-        //     addEmployee();
-        // } else if (answer.action === 'Update employee role') {
-        //     updateRole();
-        // }
-        // else if (answer.action === 'Exit') {
-        //     connection.end();
-        // }
+       
     })
 }
 const viewDepartments = () => {
