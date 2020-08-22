@@ -97,7 +97,7 @@ const viewEmployees = () => {
         // })  
     });
 }
-function addDepartment() {
+const addDepartment = () => {
     inquirer
         .prompt({
             name: "department",
@@ -106,87 +106,14 @@ function addDepartment() {
           })
         .then(function(answer) {
         var query = "INSERT INTO department (name) VALUES ( ? )";
-        connection.query(query, answer.department, function(err, res) {
-            console.log(`You have added this department: ${(answer.department).toUpperCase()}.`)
+        connection.query(query, answer.department, (err, res) => {
+            console.log(`Successfully added the: ${(answer.department)} department.`)
         })
         viewDepartments();
         })
 }
 
 
-// function addEmployee() {
-//     //empty array to push inputs inside of
-//     const roleList = [];
-//     const roleIdList = [];
-//     //empty array to push inputs inside of
-//     const managerList = [];
-//     const managerIdList = [];
-//     connection.query("SELECT * FROM employee", function (
-//       err,
-//       res
-//     ) {
-//       if (err) throw err;
-//       for (var i = 0; i < res.length; i++) {
-//         roleList.push(res[i].title);
-//         roleIdList.push(res[i].id.toString());
-//       }
-//       connection.query("SELECT * FROM employee", function (
-//         err,
-//         res
-//       ) {
-//         if (err) throw err;
-//         for (var i = 0; i < res.length; i++) {
-//           managerList.push(res[i].first_name + " " + res[i].last_name);
-//           managerIdList.push(res[i].id.toString());
-//         }
-//         // Build out the inquirer prompt to add employee's first name and last name
-//         inquirer.prompt([
-//           {
-//             type: "input",
-//             name: "firstName",
-//             message: "What is the Employee's first name?",
-//           },
-//           {
-//             type: "input",
-//             name: "lastName",
-//             message: "What is the Employee's last name?",
-//           },
-//           {
-//             type: "list",
-//             name: "role",
-//             message: "What is the Employee's Role ID?",
-//             choices: roleList
-//           },
-//           {
-//             type: "list",
-//             name: "managerId",
-//             message: "What is the Employee's Manager?",
-//             choices: managerList
-//           }
-//         ])
-//         .then(val => {
-//           connection.query(
-//               "INSERT INTO employee (first_name, last_name, role_id) VALUES (?, ?, ?, ?);", [
-//    val.firstName,
-//                   val.lastName,
-//                   roleIdList[roleList.indexOf(val.role)],
-//                   managerIdList[managerList.indexOf(val.managerId)]
-//               ],
-//               function(err, res) {
-//                   if (err) throw err;
-//                   console.log("\n");
-//                   console.log("Successfully added Employee");
-//                   console.log("\n");
-//                   start();
-//               }
-//           );
-//       });
-//    })
-//    })
-//    }
-//    function exit() {
-//     connection.end();
-//    }
 
    connection.connect(function(err){
     if (err) throw err;
