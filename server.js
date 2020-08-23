@@ -1,8 +1,10 @@
+// The below alerts Javascript what requirements it must take in to make the App run
 const mysql = require("mysql");
 const inquirer = require("inquirer");
 const table = require("console.table");
 // const promisemysql = require("promise-mysql");
 
+// This is creating a connection to our MySQL database
 var connection = mysql.createConnection({
     host: "localhost",
     port: 3306,
@@ -11,12 +13,7 @@ var connection = mysql.createConnection({
     database: "employee_db"
 });
 
-// connection.connect(function(err){
-//     if (err) throw err;
-//     console.log("connected as id " + connection.threadId);
-//     // start();
-// });
-
+// This starts the main display in the terminal
 const start = () => {
     return inquirer.prompt({
         name:"menu",
@@ -58,6 +55,7 @@ const start = () => {
        
     })
 }
+// This allows the users to view all departments
 const viewDepartments = () => {
     
     connection.query("SELECT * FROM department", (err, res) => {
@@ -69,6 +67,7 @@ const viewDepartments = () => {
     });
 }
 
+// This function allows the user to view all roles
 const viewRoles = () => {
     var query = `SELECT roles.id, roles.title, roles.salary, department.name 
     AS department
@@ -79,12 +78,10 @@ const viewRoles = () => {
     connection.query(query, (err, res) => {
         if(err) throw err;
         console.table(res)
-        // res.forEach( roles => {
-        //     console.log(`ID: ${roles.id} | Title: ${roles.title} | Salary: ${roles.salary}`)
-        // })  
     });
 }
 
+// This allows the user to view all employees
 const viewEmployees = () => {
     var query = `SELECT * FROM employee`
     // join with role table , join employee with employee
@@ -95,6 +92,8 @@ const viewEmployees = () => {
         
     });
 }
+
+// This allows the user to add a new department
 const addDepartment = () => {
     inquirer
         .prompt({
@@ -111,6 +110,7 @@ const addDepartment = () => {
         })
 }
 
+// This allows the user to add a new role
 const addRole = () => { 
     return inquirer
     .prompt([{
@@ -138,6 +138,7 @@ const addRole = () => {
         })
     }
 
+    // This allows a user to add a new employee
     const addEmployee = () => {
         return inquirer
         .prompt([{
@@ -154,28 +155,22 @@ const addRole = () => {
             name: "role_id",
             type: "number",
             message: "What role does the employee have?",
-            // choices: [
-            //     "CIO",
-            //     "Outside Sales",
-            //     "Recruiter"
-            // ]
           }
           ])  
               .then( answer =>  {
                 var query = "INSERT INTO employee (first_name, last_name, role_id) VALUES ( ?, ?, ? )";
                 connection.query(query, [answer.first_name, answer.last_name, answer.role_id], (err, res) => {
                     console.table(`Successfully added the: employee.`)
-                    // console.log(`ID: ${roles.id} | Title: ${roles.title} | Salary: ${roles.salary}`)
-                    // ${(answer.first_name)}
                 })
             
             })
         }
 
+    // This establishes a connection to our terminal
    connection.connect(function(err){
     if (err) throw err;
     console.log("connected as id " + connection.threadId);
    
 });
-
+// Callback to the start fucntion up top
 start()
