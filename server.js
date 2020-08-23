@@ -34,8 +34,7 @@ const start = () => {
         ]
     })
     .then( response => {
-        console.log("response")
-        console.log(response)
+        console.log(response.menu)
         switch (response.menu){
             case "View all departments":
                return viewDepartments();
@@ -46,7 +45,8 @@ const start = () => {
                 return viewEmployees();
             case "Add a department":
                 return addDepartment();
-            case "Add a Role":
+            case "Add a role":
+                console.log("case hit");
                 return addRole();
             case "Add an employee":
                 return addEmployee();
@@ -64,7 +64,7 @@ const viewDepartments = () => {
         if(err) throw err;
         // console.log(res)
         res.forEach(department => {
-            console.log(`ID: ${department.id} | Name: ${department.name}`)
+            console.table(`ID: ${department.id} | Name: ${department.name}`)
         })  
     });
 }
@@ -86,15 +86,13 @@ const viewRoles = () => {
 }
 
 const viewEmployees = () => {
-    var query = `SELECT employee.id, employee.first_name, employee.last_name`
+    var query = `SELECT * FROM employee`
     // join with role table , join employee with employee
     connection.query(query, (err, res) => {
         if(err) throw err;
-        // console.log(res);
+  
         console.table(res)
-        // res.forEach( roles => {
-        //     console.log(`ID: ${roles.id} | Title: ${roles.title} | Salary: ${roles.salary}`)
-        // })  
+        
     });
 }
 const addDepartment = () => {
@@ -104,16 +102,75 @@ const addDepartment = () => {
             type: "input",
             message: "What is the name of the new department?",
           })
-        .then(function(answer) {
+        .then( answer => {
         var query = "INSERT INTO department (name) VALUES ( ? )";
         connection.query(query, answer.department, (err, res) => {
-            console.log(`Successfully added the: ${(answer.department)} department.`)
+            console.table(`Successfully added the: ${(answer.department)} department.`)
         })
         viewDepartments();
         })
 }
 
+const addRole = () => { 
+    return inquirer
+    .prompt([{
+        name: "title",
+        type: "input",
+        message: "What is the title of the new role?",
+      }, 
+      {
+        name: "salary",
+        type: "number",
+        message: "What is the salary of the new role?",
+      },
+      {
+        name: "department",
+        type: "number",
+        message: "Which department does this role fall under?",
+      }
+      ])  
+          .then( answer =>  {
+            var query = "INSERT INTO roles (title, salary, department_id) VALUES ( ?, ?, ? )";
+            connection.query(query, [answer.title, answer.salary, answer.department], (err, res) => {
+                console.table(`Successfully added the: ${(answer.title)} role.`)
+            })
+        viewRoles();
+        })
+    }
 
+    const addEmployee = () => {
+        return inquirer
+        .prompt([{
+            name: "first_name",
+            type: "input",
+            message: "What is the employee's first name?",
+          }, 
+          {
+            name: "last_name",
+            type: "input",
+            message: "What is the employee's last name?",
+          },
+          {
+            name: "role_id",
+            type: "number",
+            message: "What role does the employee have?",
+            // choices: [
+            //     "CIO",
+            //     "Outside Sales",
+            //     "Recruiter"
+            // ]
+          }
+          ])  
+              .then( answer =>  {
+                var query = "INSERT INTO employee (first_name, last_name, role_id) VALUES ( ?, ?, ? )";
+                connection.query(query, [answer.first_name, answer.last_name, answer.role_id], (err, res) => {
+                    console.table(`Successfully added the: employee.`)
+                    // console.log(`ID: ${roles.id} | Title: ${roles.title} | Salary: ${roles.salary}`)
+                    // ${(answer.first_name)}
+                })
+            
+            })
+        }
 
    connection.connect(function(err){
     if (err) throw err;
